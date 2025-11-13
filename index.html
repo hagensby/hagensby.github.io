@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rikke's Research Portfolie</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<main>
+    <div class="masonry">
+    <div class="item item1"> About </div>
+        <div class="item item1">Rikke Hagenby Jensen</div>
+        <div class="item item2"><a href="publications.html">Publications</a></div>
+        <div class="item item3">Projects</div>
+        <div class="item item4">  <p id="type"></p></div>
+        <div class="item item5">Item 5</div>
+        <div class="item item6">Item 6</div>
+        <div class="item item7">
+            <p>Hej</p>
+            <p>hejsa igen</p>
+        </div>
+        <div class="item item8">Item 8</div>
+        <div class="item item9">Item 9</div>
+        <div class="item item10">Item 10</div>
+    </div>
+    </main>
+    
+
+  
+
+<script>
+const sentences = [
+  "Hello there!",
+  "This is a typewriter effect.",
+  "It loops through your sentences.",
+  "Super easy to customize."
+];
+
+let sentenceIndex = 0;
+let charIndex = 0;
+const speed = 120;        // skrivhastighed
+const delayBetween = 1200; // pause mellem sætninger
+
+function type() {
+  const element = document.getElementById("type");
+  const currentSentence = sentences[sentenceIndex];
+
+  element.textContent = currentSentence.substring(0, charIndex);
+  charIndex++;
+
+  if (charIndex <= currentSentence.length) {
+    setTimeout(type, speed);
+  } else {
+    // Hele sætningen skrevet → vent og gå til næste
+    setTimeout(() => {
+      charIndex = 0;
+      sentenceIndex = (sentenceIndex + 1) % sentences.length; // loop
+      type();
+    }, delayBetween);
+  }
+}
+
+type();
+</script>
+
+</body>
+</html>

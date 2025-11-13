@@ -1,0 +1,110 @@
+ body {
+        font-family: Arial, sans-serif;
+        background-color: #f0f0f0;
+        padding: 20px;
+        margin: 0;
+    }
+a {
+     text-decoration: none;
+}
+a:hover{
+ text-decoration: none;
+}
+
+
+    .masonry {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        grid-auto-rows: minmax(20px, 1fr);
+        gap: 20px;
+        width: 100%;
+  max-width: 100%;
+    }
+    /* Max 3 kolonner 
+@media (max-width: 1199px) {
+  .masonry {
+    grid-template-columns: repeat(3, minmax(300px, 1fr));
+
+  }
+}*/
+
+/* Max 2 kolonner 
+@media (max-width: 899px) {
+  .masonry {
+    grid-template-columns: repeat(2, minmax(300px, 1fr));
+
+  }
+}*/
+
+/* 1 kolonne på mobil */
+@media (max-width: 599px) {
+  .masonry {
+    grid-template-columns: repeat(2, 1fr);
+ 
+  }
+}
+/*
+.masonry > div {
+  aspect-ratio: 1 / 1;
+}
+.item1 { 
+    grid-column: span 2;
+    grid-row: span 3; 
+    background-color: #93e4c1;
+}*/
+
+     .item {
+        
+        background-color: #D3F9B5;
+        padding: 20px;
+        box-sizing: border-box;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        transition: transform 0.3s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2em;
+        color: #fff;
+        grid-column: span 1;
+        grid-row: span 1; 
+    }
+    .item:hover {
+        /*transform: translateY(-10px);*/
+        background-color: #f0f0f0;
+        border: 1px solid black;
+        color: #1f6f78;
+    }
+
+.item1 { 
+    grid-column: span 1;
+    grid-row: span 10; 
+    background-color: #93e4c1; }
+.item2 { grid-row: span 7; background-color: #3baea0; }
+.item3 { grid-row: span 10; background-color: #118a7e; }
+.item4 { grid-row: span 6; background-color: #1f6f78; }
+.item5 { grid-row: span 5; background-color: #3baea0; }
+.item6 { grid-row: span 5; background-color: #118a7e; }
+.item7 { grid-row: span 5; 
+    background-color: #93e4c1; 
+    flex-direction: column;
+}
+.item8 { grid-row: span 5; background-color: #3baea0; }
+.item9 { grid-row: span 5; background-color: #1f6f78; }
+.item10 { grid-row: span 5; background-color: #93e4c1;}
+
+.first-color { 
+	background: #93e4c1; 
+}
+	
+.second-color { 
+	background: #3baea0; 
+}
+
+.third-color { 
+	background: #118a7e; 
+}
+
+.fourth-color { 
+	background: #1f6f78; 
+}
