@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Rikke Hagensby Jensen</title>
+  <style>
+    body{
+      background-color: rgb(207, 247, 227);
+    }
+    .entry {
+      margin: 10px;
+      padding: 10px;
+      /*background-color: rgb(228, 235, 237);
+      border: 2px solid greenyellow;
+      border-radius: 5px;
+      */
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      
+    }
+
+    .floaterDiv {
+      margin: 5px 30px 5px 30px;
+      padding: 10px;
+      /*background-color: greenyellow;*/
+      border: 1px solid rgb(191, 240, 216);
+      font-size: small;
+    }
+
+    .textLink {
+      cursor: pointer;
+      color: black;
+      text-decoration: underline;
+      margin: 2px 20px 1px 5px;
+    }
+
+    .copy {
+      cursor: pointer;
+      color: black;
+      text-decoration: underline;
+    }
+    .iconLinks{
+      cursor: pointer;
+      color: black;
+      border-bottom: 1px solid black;
+    }
+    .iconLinks:hover{
+      cursor: pointer;
+      color: blueviolet;
+      border-bottom: 1px solid blueviolet;
+    }
+    #bibliograf{
+      width: 60%;
+      margin: 0 auto;
+      text-align: left;
+      
+    }
+    .year{
+      font-size: 2em;
+
+    }
+    .head{
+      font-size: 1.8em;
+    }
+  </style>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <script type="text/javascript" src="bibtex.json"></script>
+</head>
+
+<body>
+  <div style="text-align: center;">
+   
+   <div id="bibliograf">
+    <h1" class="head">Publications</h1>
+    <p style="font-size: 0.7em;">Please find an overview of my publications below. I publicly share the pre-print PDF of all my published work.
+    </p>
+    <p style="font-size: 0.7em;"><a href="https://scholar.google.dk/citations?user=XDmk5c4AAAAJ&hl=en" target="_blank" rel="noopener noreferrer" class="iconLinks" style="border: 0px;">My Google Scholar.</a></p>
+   <div class="year">2024</div>
+   </div>
+  </div>
+  <script type="module" src="index.js"></script>
+  <!-- JS BIBTEX-->
+  <script>
+    /*GLOBAL VARIBLES*/
+    let cleanedBibEntries = [];
+    /*
+      Når det kommer på serveren, så lav en absolute 
+      fetch('https://server.com/data.json')
+   */
+    async function bibJsonFetch() {
+      const response = await fetch('./bibtex.json');
+      const jsonData = await response.json();
+      console.log(jsonData);
+      // console.log("Antal Artikler " + jsonData.length);
+      // console.log("Antal proc " + getProc(jsonData).length);
+      // console.log("Antal journals " + getJournal(jsonData).length);
+      // console.log(cleanedEntries(jsonData));
+      let bibDiv = document.getElementById('bibliograf');
+      cleanedBibEntries = jsonData;
+      cleanedBibEntries.sort((a, b) => b.year - a.year);
+      for (const bibEntry of cleanedBibEntries) {
+        let divEntry = document.createElement('div');
+        divEntry.classList.add('entry');
+        divEntry.setAttribute('id', bibEntry.id);
+        divEntry.innerHTML = "";
+
+        //DO AUTHORS
+        for (const author of bibEntry.authorACM) {
+          if (author.includes("Rikke")) {
+            if (bibEntry.authorACM.indexOf(author) !== bibEntry.authorACM.length - 1) {
+              divEntry.innerHTML += "<strong>" + author + ",</strong> "
+            } else {
+              divEntry.innerHTML += " and <strong>" + author + "</strong>."
+            }
+          } else if (bibEntry.authorACM.indexOf(author) === bibEntry.authorACM.length - 1) {
+            divEntry.innerHTML += " and " + author + ".";
+          } else if (bibEntry.authorACM.indexOf(author) === bibEntry.authorACM.length - 2) {
+            divEntry.innerHTML += author;
+          } else {
+            divEntry.innerHTML += author + ", ";
+          }
+
+        }
+        //DO YEAR
+        divEntry.innerHTML += " " + bibEntry.year + ".";
+        divEntry.innerHTML += '<i> "' + bibEntry.title + '". ';
+        divEntry.innerHTML += bibEntry.outlet;
+        if (bibEntry.series.length > 0) {
+          divEntry.innerHTML += "<strong> (" + bibEntry.series + ")</strong>. ";
+        } else {
+          divEntry.innerHTML += ". ";
+        }
+
+        let linkToPdfFile = bibEntry.file ? '<a href="' + bibEntry.file + '" target="_blank" rel="noopener noreferrer" style="text-decoration: none"> <i class="bi bi-file-earmark-pdf iconLinks"></i></a>' : '';
+        divEntry.innerHTML += '<i class="bi bi-chat-left-quote iconLinks"></i> <i class="bi bi-eyeglasses iconLinks"></i> <a href="' + bibEntry.externalLink + '" target="_blank" rel="noopener noreferrer" style="text-decoration: none"> <i class="bi bi-link-45deg iconLinks"></i> </a>' + linkToPdfFile;
+        
+        bibDiv.appendChild(divEntry);
+      }
+
+    }
+    /*FRETCH AND PARSE BIBTEX*/
+    bibJsonFetch();
+
+ 
+
+    /*CLICK on EACH BIB ENTRY*/
+    let entireBibDiv = document.getElementById('bibliograf');
+    let hideFloater = false;
+    let currentlySelected = undefined;
+    let selectedBibEntry
+    entireBibDiv.addEventListener('click', function (e) {
+      if(getBibEntry(e.target.parentElement.id)){
+        selectedBibEntry = getBibEntry(e.target.parentElement.id)
+      }
+      
+      let mother = document.getElementById(e.target.parentElement.id);
+      let triggedIcon = e.target.className;
+      let floater = document.createElement('div');
+      floater.setAttribute('class', 'floaterDiv');
+      if (hideFloater && triggedIcon === currentlySelected) {
+        mother.nextSibling.remove();
+        hideFloater = false;
+        currentlySelected = triggedIcon;
+        console.log("REMOVE");
+      } else if (triggedIcon === "textLink") {
+        e.target.parentElement.remove();
+        hideFloater = false;
+      }
+      else if (triggedIcon === "bi bi-chat-left-quote iconLinks") {
+        if (triggedIcon !== currentlySelected) {
+          mother.nextSibling.remove();
+        }
+        floater.innerHTML = '<pre><code class="language-css">' + selectedBibEntry.bibtexRef + '</code></pre><span class="textLink">Close ref </span> <div class="tooltip"> <span onclick="clickedCopyRef()" onmouseout="outFunc()" class="copy"> <i class="bi bi-copy"></i><span class="tooltiptext" id="myTooltip">Copy to clipboard</span> Copy reference </span></div>';
+        mother.after(floater);
+        currentlySelected = triggedIcon;
+        hideFloater = true;
+      } else if (triggedIcon === "bi bi-journal-bookmark iconLinks" || triggedIcon === "bi bi-eyeglasses iconLinks") {
+        if (triggedIcon !== currentlySelected) {
+          mother.nextSibling.remove();
+        }
+        if (selectedBibEntry.abstract) {
+          floater.innerHTML = '<b> Abstract: </b>' + selectedBibEntry.abstract + '<br/> <span class="textLink">Close abstract';
+        } else {
+          floater.innerText = "No abstract";
+        }
+        mother.after(floater);
+        currentlySelected = triggedIcon;
+        hideFloater = true;
+      }
+    });
+
+
+    /* Hjælpefunktioner */
+    function getBibEntry(id) {
+      let bibEntry;
+      bibEntry = cleanedBibEntries.filter(element => {
+        return element.id === id;
+      });
+      return bibEntry[0];
+    }
+    function getProcs(bibEntries) {
+      let proc = bibEntries.filter(function (entry) {
+        return entry.entryType === 'inproceedings';
+      });
+      return proc;
+    }
+    function isProc(bibEntry) {
+      return bibEntry.entryType === 'inproceedings';
+    }
+
+    function getJournal(bibEntries) {
+      let proc = bibEntries.filter(function (entry) {
+        return entry.entryType === 'article';
+      });
+      return proc;
+    }
+    function isJournal(bibEntry) {
+      return bibEntry.entryType === 'article';
+    }
+    function hasSeries(bibEntry) {
+      return bibEntry.entryTags.series !== undefined;
+    }
+
+    async function clickedCopyRef() {
+      var copyText = selectedBibEntry.bibtexRef;
+      await navigator.clipboard.writeText(copyText);
+
+      var tooltip = document.getElementById("myTooltip");
+      tooltip.innerHTML = "Copied reference to clipboard "
+    }
+
+    function outFunc() {
+      var tooltip = document.getElementById("myTooltip");
+      tooltip.innerHTML = "Copy to clipboard";
+    }
+
+  </script>
+</body>
+
+</html>
+
+
